@@ -1,87 +1,87 @@
-from model.JuegoNumeroSecreto import JuegoNumeroSecreto
+from model.SecretNumberGame import SecretNumberGame
 
 '''
- Interfaz del juego Adivinar el número
+ Class of the interfaz of the game
 '''
 class Interfaz:
-    juego: JuegoNumeroSecreto
+    game: SecretNumberGame
 
     '''
-     Constructor de la clase
-     Inicializa juego
+     Class' constructor
+     Inicializa game
     '''
     def __init__(self) -> None:
-        self.juego = JuegoNumeroSecreto()
+        self.game = SecretNumberGame()
         pass
 
     '''
-     Método que inicia el juego
-     Pregunta al jugador en bucle para que introduzca por una de las opciones válidas del juego
-     Se acaba cuando el jugador sale, consume todos los intentos o gana el juego
-     En caso de que se termine el juego por otra razón que no sea que salió de este, se le pregunta si quiere volver a jugar
+     Initializes the game
+     Ask the player for a correct option to play
+     The game ends when the player guess the secret number, exits the game or consumes all the tries
+     If the game ends asks the player if wants to play again, except when the player exits the game
     '''
-    def iniciar(self) -> None:
-        opcion : int = 1
-        while(opcion != 6 and self.juego.haTerminado() == False and self.juego.getIntentos() < self.juego.getMaxIntentos()):
-            opcion = self.leerNumero()
-            if(opcion >= 1 and opcion <=6):
-                if(opcion == 1):
-                    print("Introduzca un número entre 1 y 100")
+    def start(self) -> None:
+        option : int = 1
+        while(option != 6 and self.game.getIsOver() == False and self.game.getTries() < self.game.getMaxTries()):
+            option = self.leerNumero()
+            if(option >= 1 and option <=6):
+                if(option == 1):
+                    print("Please introduce a number between 1 and 100")
                     guessNum : int = int(input())
-                    self.juego.realizarJugada(guessNum)
-                    print(self.juego.getResultado())
-                if(opcion == 2):
-                    print("El número de intentos máximos es: " + str(self.juego.getMaxIntentos()))
-                if(opcion == 3):
-                    print("Usted lleva: " + str(self.juego.getIntentos()) + " intentos")
-                    print("Le quedan: " + str((self.juego.getMaxIntentos() - self.juego.getIntentos())) + " intentos")
-                if(opcion == 4):
-                    print("El último número que ha introducido es: " + str(self.juego.getIntentado()))
-                if(opcion == 5):
-                    self.juego.resetJuego()
-                    print("El número secreto era " + str(self.juego.getNumeroSecreto()))
-                if(opcion == 6):
-                    print("Adiós, gracias por jugar")
-                    print("El número secreto era " + str(self.juego.getNumeroSecreto()))
+                    self.game.play(guessNum)
+                    print(self.game.getMessage())
+                if(option == 2):
+                    print("You have : " + str(self.game.getMaxTries()) + " tries at maximum")
+                if(option == 3):
+                    print("You have consumed: " + str(self.game.getTries()) + " tries")
+                    print("There are : " + str((self.game.getMaxTries() - self.game.getTries())) + " tries left")
+                if(option == 4):
+                    print("The last number you have introduced: " + str(self.game.getTriedNumber()))
+                if(option == 5):
+                    self.game.resetGame()
+                    print("The secret number was " + str(self.game.__getsecretNumber()))
+                if(option == 6):
+                    print("Goodbye, thanks for playing")
+                    print("The secret number was " + str(self.game.__getsecretNumber()))
             else:
-                print("Introduzca una opción válida por favor")
+                print("Please introduce a valid option")
 
-        sigue : chr = self.seguirJugando()
-        if(sigue == 'S' and opcion != 6):
-            self.juego.resetJuego()
-            self.iniciar()
+        keepPlaying : chr = self.keepPlaying()
+        if(keepPlaying == 'S' and option != 6):
+            self.game.resetGame()
+            self.start()
 
-
-    '''
-     Método que imprime el menú por consola
-    '''
-    def presentacionJuego(self) -> None:
-        print("Elija una opción")
-        print("1.- Introducir un número")
-        print("2.- Consultar cuántos intentos tiene en total")
-        print("3.- Consultar cuántos intentos lleva")
-        print("4.- Consultar cuál es el último número que ha introducido")
-        print("5.- Reiniciar el juego")
-        print("6.- Salir del juego")
 
     '''
-     Método que lee la opción introducida por el jugador
+     Prints menu
+    '''
+    def printMenu(self) -> None:
+        print("Choose an option")
+        print("1.- Introduce a number")
+        print("2.- Check Max tries")
+        print("3.- Check how many tries remains")
+        print("4.- Check the last number introduced")
+        print("5.- Reset game")
+        print("6.- Exit game")
+
+    '''
+     Reads by keyboard the option
      @return opcion : int
     '''
     def leerNumero(self) -> int:
-        self.presentacionJuego()
-        opcion : int = int(input())
-        return opcion
+        self.printMenu()
+        option : int = int(input())
+        return option
 
     '''
-     Método que pregunta al jugador si quiere seguir jugando
+     Ask the player to play again
      @return sigue : chr
-     Si devuelve S, se reinicia el juego, si devuelve N se acaba
+     if S reset the game
     '''
-    def seguirJugando(self) -> chr:
+    def keepPlaying(self) -> chr:
         sigue : chr = ''
         while(sigue != 'S' and sigue != 'N'):
-            print("¿Quiere seguir jugando?")
+            print("Do you want to keep playing?")
             print("S/N")
             entradaTeclado = input().capitalize()
             sigue = entradaTeclado[0]
