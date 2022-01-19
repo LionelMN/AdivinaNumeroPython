@@ -4,7 +4,7 @@ class main:
 
     def main():
         interfaz = Interfaz()
-        interfaz.iniciar()
+        interfaz.start()
 
     if __name__ == "__main__":
         main()
